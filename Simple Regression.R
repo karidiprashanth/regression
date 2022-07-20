@@ -9,4 +9,13 @@ model <- lm(Sound_pressure_level ~ .,data = data)
 summary(model)
 par(mfrow=c(1,1))
 plot(model)
-
+set.seed(1)
+d <- sample(x = nrow(data),size = nrow(data)*0.7)
+train <- data[d,]
+test <- data[-d,]
+rmodel <- lm(log(Sound_pressure_level)~.,data = train)
+summary(rmodel)
+rpred <- predict(rmodel,test)
+rpred <- exp(rpred)
+library(Metrics)
+rmse(actual = test$Sound_pressure_level,predicted = rpred)
